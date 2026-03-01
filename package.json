@@ -1,0 +1,35 @@
+{
+  "name": "lovechatty-backend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch server/index.js",
+    "start": "node server/index.js",
+    "check": "node --check server/index.js",
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "backup:dry-run": "node scripts/mongo-backup.mjs --dry-run",
+    "restore:dry-run": "node scripts/mongo-restore.mjs --dry-run --archive=./backups/example.gz.archive --db=lovechatty_restore_test --drop",
+    "backup:verify": "node scripts/verify-backup-restore.mjs",
+    "smoke:prod": "node scripts/smoke-production.mjs",
+    "validate:env:prod": "node scripts/validate-production-env.mjs",
+    "smoke:ops": "node scripts/ops-metrics-smoke.mjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "mongoose": "^8.19.1",
+    "multer": "^2.0.2",
+    "socket.io": "^4.8.1",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^10.1.4",
+    "socket.io-client": "^4.8.1",
+    "supertest": "^7.1.4"
+  }
+}
