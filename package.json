@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node --watch server/index.js",
     "start": "node server/index.js",
+    "build": "npm run check",
     "check": "node --check server/index.js",
     "test": "node --test",
     "test:watch": "node --test --watch",
