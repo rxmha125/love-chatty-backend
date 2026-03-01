@@ -26,6 +26,13 @@ import { logger } from "./utils/logger.js";
 
 const createCorsOriginValidator = () => {
   const allowedOrigins = Array.isArray(config.clientOrigins) ? config.clientOrigins : [];
+  const normalizedAllowedOrigins = allowedOrigins.map((origin) => {
+    try {
+      return new URL(origin).origin;
+    } catch {
+      return String(origin || "").trim().replace(/\/+$/, "");
+    }
+  });
   const allowAll = Boolean(config.corsAllowAll) || allowedOrigins.includes("*");
 
   return (origin, callback) => {
@@ -35,7 +42,15 @@ const createCorsOriginValidator = () => {
       return;
     }
 
-    if (allowAll || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = (() => {
+      try {
+        return new URL(origin).origin;
+      } catch {
+        return String(origin || "").trim().replace(/\/+$/, "");
+      }
+    })();
+
+    if (allowAll || normalizedAllowedOrigins.includes(normalizedOrigin)) {
       callback(null, true);
       return;
     }

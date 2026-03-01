@@ -24,10 +24,25 @@ for (const envPath of envCandidates) {
 
 const normalizeSecret = (value) => String(value || "").trim();
 
+const normalizeOriginEntry = (value) => {
+  const raw = String(value || "").trim();
+  if (!raw) {
+    return "";
+  }
+  if (raw === "*") {
+    return "*";
+  }
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return raw.replace(/\/+$/, "");
+  }
+};
+
 const parseCsvList = (value) =>
   String(value || "")
     .split(",")
-    .map((entry) => entry.trim())
+    .map((entry) => normalizeOriginEntry(entry))
     .filter(Boolean);
 
 const parsePositiveInteger = (value, fallback) => {
@@ -159,7 +174,7 @@ const DEFAULT_UPLOAD_ALLOWED_MIME_TYPES = [
 ];
 
 const configuredClientOrigins = parseCsvList(process.env.CLIENT_ORIGINS);
-const fallbackClientOrigin = String(process.env.CLIENT_ORIGIN || "http://localhost:8080").trim() || "http://localhost:8080";
+const fallbackClientOrigin = normalizeOriginEntry(process.env.CLIENT_ORIGIN || "http://localhost:8080") || "http://localhost:8080";
 const clientOrigins = configuredClientOrigins.length > 0 ? configuredClientOrigins : [fallbackClientOrigin];
 const corsAllowAll = clientOrigins.includes("*");
 const uploadAllowedMimeTypes = parseCsvList(process.env.UPLOAD_ALLOWED_MIME_TYPES);
